@@ -1,7 +1,7 @@
 # goto-project
 A sample interview project for a Data Science Team Lead at GoTo
 
-## Setup
+## Setup EDA
 
 1. Setup python venv
 2. Install requirements.txt into venv 
@@ -14,3 +14,10 @@ jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookAp
 
 ```
 
+## Setup Run Pipeline
+
+```
+python3 process.py
+```
+
+Check /data/output for shap graphs
