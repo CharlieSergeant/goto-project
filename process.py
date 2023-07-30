@@ -170,7 +170,7 @@ def train_test_split_df(df, test_size=0.2, random_state=None, even=False):
     return X_train, X_test, y_train, y_test
 
 
-def fit_shap(X, y, visualize=True, save_plot=False, save_path=None):
+def fit_shap(X, y, save_plot=False, save_path=None):
     """
     Train a Machine Learning Model (XGBoost) and compute SHAP values for feature importance.
 
@@ -194,13 +194,11 @@ def fit_shap(X, y, visualize=True, save_plot=False, save_path=None):
     average_shap_values = pd.DataFrame(shap_values).mean()
     shap.summary_plot(shap_values, X, plot_type="bar", feature_names=X.columns)
     if save_plot and save_path:
-        plt.savefig(save_path)  # Save the plot to the specified path
-    if visualize:
-        plt.show()
+        plt.savefig(save_path,format='png')  # Save the plot to the specified path
     return model, explainer
 
 
-def run(disallowed_features=None, visualize=True, save_plot=False, save_path=''):
+def run(disallowed_features=None, save_plot=False, save_path=''):
     """
     Load data, transform it, and train models with and without stratified train-test split.
 
@@ -215,13 +213,13 @@ def run(disallowed_features=None, visualize=True, save_plot=False, save_path='')
 
     print('Running Unstratified fit_shap test...')
     unstratified_X_train, unstratified_X_test, unstratified_y_train, unstratified_y_test = train_test_split_df(transformed_df, test_size=0.2, random_state=42, even=False)
-    unstratified_train_model, unstratified_shap = fit_shap(unstratified_X_train, unstratified_y_train, visualize=visualize, save_plot=save_plot, save_path=f'{save_path}unstratified_shap_chart.png')
+    unstratified_train_model, unstratified_shap = fit_shap(unstratified_X_train, unstratified_y_train, save_plot=save_plot, save_path=f'{save_path}unstratified_shap_chart.png')
     unstratified_accuracy = unstratified_train_model.score(unstratified_X_test, unstratified_y_test)
     print("Unstratified Model Accuracy:", unstratified_accuracy)
 
     print('Running Stratified fit_shap test...')
     stratified_X_train, stratified_X_test, stratified_y_train, stratified_y_test = train_test_split_df(transformed_df, test_size=0.2, random_state=42, even=True)
-    stratified_train_model, stratified_shap = fit_shap(stratified_X_train, stratified_y_train, visualize=visualize, save_plot=save_plot, save_path=f'{save_path}stratified_shap_chart.png')
+    stratified_train_model, stratified_shap = fit_shap(stratified_X_train, stratified_y_train, save_plot=save_plot, save_path=f'{save_path}stratified_shap_chart.png')
     stratified_accuracy = stratified_train_model.score(stratified_X_test, stratified_y_test)
     print("Stratified Model Accuracy:", stratified_accuracy)
 
@@ -229,7 +227,6 @@ def run(disallowed_features=None, visualize=True, save_plot=False, save_path='')
 if __name__ == "__main__":
     run(
         disallowed_features=None,
-        visualize=False,
         save_plot=True,
         save_path='./data/output/'
     )
